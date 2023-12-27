@@ -3,6 +3,6 @@ import lombok.Data;
 
 @Data
 public class DepartmentDTO {
-    private int Dept_Id;
-    private String Dept_Name;
+    private int deptId;
+    private String deptName;
 }

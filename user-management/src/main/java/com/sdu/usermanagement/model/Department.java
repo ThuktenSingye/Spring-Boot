@@ -10,14 +10,16 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name="Department")
+@Table( name = "department")
 public class Department {
     // Define Field
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Dept_Id") // Optional
-    private int Dept_Id;
+    private int deptId;
 
     @Column(name = "Dept_Name")
-    private String Dept_Name;
+    private String deptName;
+
+
 }
