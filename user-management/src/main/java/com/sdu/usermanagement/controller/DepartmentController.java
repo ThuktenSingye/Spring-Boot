@@ -18,7 +18,7 @@ import com.sdu.usermanagement.dto.DepartmentDTO;
 import com.sdu.usermanagement.service.DepartmentService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("v1/api")
 public class DepartmentController {
 // Define request and response endpoint
     @Autowired
@@ -31,8 +31,7 @@ public class DepartmentController {
             departmentDTO.setDeptId(0);
             DepartmentDTO savedDepartment = departmentService.save(departmentDTO);
 
-            // Return a ResponseEntity with the saved department and HTTP status 201 (Created)
-            return new ResponseEntity<>(savedDepartment, HttpStatus.OK);
+            return ResponseEntity.ok(savedDepartment);
 
         } catch (Exception e) {
             // Handle any exceptions that might occur during the save operation
@@ -69,7 +68,6 @@ public class DepartmentController {
         try{
             DepartmentDTO savedDepartment = departmentService.save(departmentDTO);
 
-// Return a ResponseEntity with the saved department and HTTP status 201 (Created)
 
             return new ResponseEntity<>(savedDepartment, HttpStatus.OK);
         }catch(Exception e){
