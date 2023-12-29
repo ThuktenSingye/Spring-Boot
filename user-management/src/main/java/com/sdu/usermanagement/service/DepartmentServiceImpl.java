@@ -26,6 +26,8 @@ public class DepartmentServiceImpl implements DepartmentService{
     @Autowired
     private DepartmentRepository departmentRepository;
 
+    // private ModelMapper modelMapper;
+
     @Override
     public ResponseEntity<String> saveDepartment(DepartmentDTO departmentDTO) {
 
@@ -120,6 +122,7 @@ public class DepartmentServiceImpl implements DepartmentService{
 
     // Method to convert Department Entity to Department DTO
     private DepartmentDTO entityToDto(Department department){
+        // return modelMapper.map(department, DepartmentDTO.class);
 
         DepartmentDTO departmentDTO = new DepartmentDTO();
         departmentDTO.setDeptId(department.getDeptId());
@@ -129,6 +132,8 @@ public class DepartmentServiceImpl implements DepartmentService{
 
     // Method to convert Department DTO back to Department Entity
     private Department dtoToEntity(DepartmentDTO departmentDTO){
+
+        // return modelMapper.map(departmentDTO, Department.class);
 
         Department department = new Department();
         department.setDeptId(departmentDTO.getDeptId());

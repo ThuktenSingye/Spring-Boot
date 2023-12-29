@@ -1,4 +1,5 @@
 package com.sdu.usermanagement.service;
+import java.io.File;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -7,10 +8,13 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.sdu.usermanagement.dto.UserDTO;
 import com.sdu.usermanagement.model.Gender;
+import com.sdu.usermanagement.model.ProfileImage;
 import com.sdu.usermanagement.model.User;
 import com.sdu.usermanagement.repository.GenderRepository;
 import com.sdu.usermanagement.repository.SectionRepository;
@@ -34,9 +38,14 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private SectionRepository sectionRepository;
 
+    private final String FOLDER_PATH ="/home/thukten/Desktop/Spring-Boot/user-management/src/main/resources/UserProfile/";
+
 
     @Override
-    public ResponseEntity<String> save(UserDTO userDTO) {
+    public ResponseEntity<String> save(UserDTO userDTO, MultipartFile profileImageFile) {
+
+        String filePath = FOLDER_PATH + profileImageFile.getOriginalFilename();
+      
         try{
             if(userDTO.getGender() == null){
                 return new ResponseEntity<>("Missing Gender Parameter", HttpStatus.BAD_REQUEST);
@@ -53,11 +62,29 @@ public class UserServiceImpl implements UserService{
             if (section == null) {
                 return new ResponseEntity<>("Section not found", HttpStatus.BAD_REQUEST);
             }
+            
+
+            /* GET profile  */
+
+            ProfileImage profileImage = null;
+            if(profileImageFile != null){
+                profileImage = ProfileImage.builder()
+                .imageName(profileImageFile.getOriginalFilename())
+                .imageType(profileImageFile.getContentType())
+                .imagePath(filePath)
+                .build();
+            }
+            profileImageFile.transferTo(new File(filePath));
+            
+            
             User user = userDtoToEntity(userDTO);
             user.setGender(gender);
             user.setSection(section);
+            user.setProfileImage(profileImage);
 
             User saveUser = userRepository.saveAndFlush(user);  
+            System.out.println("Save user: " + saveUser);
+
             if(saveUser== null){
                 // log the error 
                 logger.info("Saved user is null! Error while saving user");
@@ -145,14 +172,17 @@ public class UserServiceImpl implements UserService{
     private UserDTO userEntityToDto(User user){
         UserDTO userDTO = new UserDTO();
         userDTO.setUserId(user.getUserId());
+        userDTO.setCidNo(user.getCidNo());
         userDTO.setFirstName(user.getFirstName());
         userDTO.setMiddleName(user.getMiddleName());
         userDTO.setLastName(user.getLastName());
         userDTO.setEmail(user.getEmail());
         userDTO.setMobileNo(user.getMobileNo());
+        userDTO.setDob(user.getDob());
         userDTO.setAddress(user.getAddress());
         userDTO.setGender(user.getGender());
         userDTO.setSection(user.getSection());
+        userDTO.setProfileImage(user.getProfileImage());
 
         return userDTO;
     }
@@ -161,15 +191,33 @@ public class UserServiceImpl implements UserService{
     private User userDtoToEntity(UserDTO userDTO){
         User user = new User();
         user.setUserId(userDTO.getUserId());
+        user.setCidNo(userDTO.getCidNo());
         user.setFirstName(userDTO.getFirstName());
         user.setMiddleName(userDTO.getMiddleName());
         user.setLastName(userDTO.getLastName());
         user.setEmail(userDTO.getEmail());
         user.setMobileNo(userDTO.getMobileNo());
+        user.setDob(userDTO.getDob());
         user.setAddress(userDTO.getAddress());
         user.setGender(userDTO.getGender());
         user.setSection(userDTO.getSection());
+        user.setProfileImage(userDTO.getProfileImage());
         return user;
+    }
+
+    @Override
+    public ResponseEntity<String> updateEmail(String email, Integer user_id) {
+
+        try{
+            if(email == null || user_id == null || user_id < 0){
+                return new ResponseEntity<>("Invalid/Null Email and User Id", HttpStatus.BAD_REQUEST);
+            }
+            userRepository.updateUserEmail(email, user_id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
   
     
