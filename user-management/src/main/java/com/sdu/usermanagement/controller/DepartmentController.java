@@ -3,7 +3,6 @@ package com.sdu.usermanagement.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,67 +25,34 @@ public class DepartmentController {
 
 // Adding Department
     @PostMapping("/departments")
-    private ResponseEntity<DepartmentDTO> addDepartment(@RequestBody DepartmentDTO departmentDTO){
-        try {
-            departmentDTO.setDeptId(0);
-            DepartmentDTO savedDepartment = departmentService.save(departmentDTO);
-
-            return ResponseEntity.ok(savedDepartment);
-
-        } catch (Exception e) {
-            // Handle any exceptions that might occur during the save operation
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    private ResponseEntity<String> addDepartment(@RequestBody DepartmentDTO departmentDTO){
+        return departmentService.saveDepartment(departmentDTO);
 
     }
 
 // Get All Department
     @GetMapping("/departments")
     private ResponseEntity<List<DepartmentDTO>> getAllDepartments() {
-        // Create the list of department DTO
-        List<DepartmentDTO> departmentDTOList = departmentService.findAllDepartment();
-
-        // Return the list with HTTP status 200 (OK)
-        return new ResponseEntity<>(departmentDTOList, HttpStatus.OK);
+        return departmentService.findAllDepartment();
     }
 
 // Retrieve Single Department By Id
     @GetMapping("/departments/{dept_id}")
-    private ResponseEntity<DepartmentDTO> getDepartmentById(@PathVariable int dept_id){
-        try{
-            DepartmentDTO departmentDTO = departmentService.findDepartmentById(dept_id);
-            return new ResponseEntity<>(departmentDTO, HttpStatus.OK);
-        }catch(Exception e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    private ResponseEntity<DepartmentDTO> getDepartmentById(@PathVariable Integer dept_id){
+        return departmentService.findDepartmentById(dept_id);
 
     }
 
 // Updating the department
     @PutMapping("/departments")
-    private ResponseEntity<DepartmentDTO> updateDepartment(@RequestBody DepartmentDTO departmentDTO){
-        try{
-            DepartmentDTO savedDepartment = departmentService.save(departmentDTO);
-
-
-            return new ResponseEntity<>(savedDepartment, HttpStatus.OK);
-        }catch(Exception e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    private ResponseEntity<String> updateDepartment(@RequestBody DepartmentDTO departmentDTO){
+        return departmentService.saveDepartment(departmentDTO);
     }
 
 // Deleting the department
     @DeleteMapping("/departments/{dept_id}")
-    private ResponseEntity<DepartmentDTO> deleteDepartment(@PathVariable int dept_id){
-        try{
-            DepartmentDTO departmentDTO = departmentService.findDepartmentById(dept_id);
-            departmentService.delete(dept_id);
-
-            return new ResponseEntity<>(departmentDTO, HttpStatus.OK);
-        }
-        catch(Exception e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    private ResponseEntity<String> deleteDepartment(@PathVariable Integer dept_id){
+        return departmentService.deleteDepartment(dept_id);
     }
 
 }

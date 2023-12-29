@@ -1,9 +1,7 @@
 package com.sdu.usermanagement.controller;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,56 +23,27 @@ public class SectionController {
     private SectionService sectionService;
 
     /* Add new Service */
-    @PostMapping("/services")
-    public ResponseEntity<SectionDTO> addService(@RequestBody SectionDTO sectionDTO){
-        try{
-            // sectionDTO.setSectId(0);
-            // System.out.println("Section DTO: " + sectionDTO);
-            SectionDTO savedSection = sectionService.save(sectionDTO);
-            return new ResponseEntity<>(savedSection, HttpStatus.OK);
-        }catch(Exception e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @PostMapping("/sections")
+    public ResponseEntity<String> addService(@RequestBody SectionDTO sectionDTO){
+        System.out.println(sectionDTO);
+        return sectionService.saveSection(sectionDTO);
     }
     /* Get All Service  */
-    @GetMapping("/services")
+    @GetMapping("/sections")
     private ResponseEntity<List<SectionDTO>> getAllSection() {
-        try{
-            // Create the list of department DTO
-            List<SectionDTO> sectionList = sectionService.findAllSection();
-
-            // Return the list with HTTP status 200 (OK)
-            return new ResponseEntity<>(sectionList, HttpStatus.OK);
-        }   
-        catch(Exception e){
-            System.out.println(e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return sectionService.findAllSection();
         
     }
 
     /* Get services by id */
-    @GetMapping("/services/{sect_id}")
-     private ResponseEntity<SectionDTO> getSectionById(@PathVariable int sect_id){
-        try{
-            SectionDTO sectionDTO = sectionService.findSectionById(sect_id);
-            return new ResponseEntity<>(sectionDTO, HttpStatus.OK);
-        }catch(Exception e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-
+    @GetMapping("/sections/{sect_id}")
+     private ResponseEntity<SectionDTO> getSectionById(@PathVariable Integer sect_id){
+        return sectionService.findSectionById(sect_id);
     }
-    @DeleteMapping("/services/{sect_id}")
-    private ResponseEntity<SectionDTO> deleteService(@PathVariable int sect_id){
-        try{
-            SectionDTO sectionDTO = sectionService.findSectionById(sect_id);
-            sectionService.delete(sect_id);
 
-            return new ResponseEntity<>(sectionDTO, HttpStatus.OK);
-        }
-        catch(Exception e){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
+    @DeleteMapping("/sections/{sect_id}")
+    private ResponseEntity<String> deleteService(@PathVariable Integer sect_id){
+        return sectionService.deleteSection(sect_id);
     }
 
 
