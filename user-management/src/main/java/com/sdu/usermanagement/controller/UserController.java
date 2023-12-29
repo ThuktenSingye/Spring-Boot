@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.sdu.usermanagement.dto.UserDTO;
 import com.sdu.usermanagement.service.UserService;
@@ -23,8 +25,11 @@ public class UserController {
 
     // Adding Department
     @PostMapping("/users")
-    public ResponseEntity<String> addUser(@RequestBody UserDTO userDTO) {
-        return userService.save(userDTO);
+    public ResponseEntity<String> addUser(
+        @RequestPart(name = "user", required = true) UserDTO userDTO,
+        @RequestPart(value = "profileImageFile", required = false) MultipartFile profileImageFile) {
+        return userService.save(userDTO, profileImageFile);
+       
     }
     
     @GetMapping("/users")
@@ -34,7 +39,7 @@ public class UserController {
 
     /* Retrieve single user */
     @GetMapping("/users/{user_id}")
-    private ResponseEntity<UserDTO> getDepartmentById(@PathVariable Integer user_id){
+    private ResponseEntity<UserDTO> getUserById(@PathVariable Integer user_id){
        return userService.findUserById(user_id);
 
     }
@@ -45,10 +50,16 @@ public class UserController {
     }
 
     // Updating the department
-    @PutMapping("/users")
-    private ResponseEntity<String> updateDepartment(@RequestBody UserDTO userDTO){
-        return userService.save(userDTO);
+    // @PutMapping("/users")
+    // private ResponseEntity<String> updateUser(@RequestBody UserDTO userDTO){
+    //     return userService.(userDTO);
+    // }
+    /* Native Query */
+    @PutMapping("users/email")
+    private ResponseEntity<String> updateUserEmail(@RequestBody UserDTO userDTO){
+        return userService.updateEmail(userDTO.getEmail(), userDTO.getUserId());
     }
+
     
 
 }
