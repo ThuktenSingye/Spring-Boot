@@ -1,14 +1,16 @@
 package com.sdu.usermanagement.model;
 
+import java.sql.Date;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -21,6 +23,9 @@ public class User{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "User_Id")
     private int userId;
+
+    @Column(name = "CID_No")
+    private long cidNo;
 
     @Column(name = "FName")
     private String firstName;
@@ -37,16 +42,26 @@ public class User{
     @Column(name = "Email")
     private String email;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+
+    @Column(name = "DOB")
+    private Date dob;
+
+    @ManyToOne(
+        cascade = {
+            CascadeType.DETACH, 
+            CascadeType.PERSIST, 
+            CascadeType.REFRESH, 
+            CascadeType.MERGE
+        }
+    )
     @JoinColumn(name = "Gender_Id")
     private Gender gender;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "Address_Id")
     private Address address;
 
     @ManyToOne(
-        fetch = FetchType.EAGER,
         cascade = {
             CascadeType.DETACH, 
             CascadeType.PERSIST, 
@@ -56,5 +71,10 @@ public class User{
     )
     @JoinColumn(name = "Section_Id")
     private Section section;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "Image_Id")
+    private ProfileImage profileImage;
+
 
 }
