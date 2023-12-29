@@ -1,22 +1,20 @@
 package com.sdu.usermanagement.service;
-
-
 import com.sdu.usermanagement.dto.UserDTO;
-
 import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 
 public interface UserService {
     /* Add user */
-    UserDTO save(UserDTO userDTO);
+    ResponseEntity<String> save(UserDTO userDTO);
 
     /* List all user */
-    List<UserDTO> findAllUser();
+    ResponseEntity<List<UserDTO>> findAllUser();
 
     /* Get User by User Id */
-    UserDTO findUserById(int user_id);
+    ResponseEntity<UserDTO> findUserById(Integer user_id);
 
     /* Delete the user */
-    void deleteUser(int user_id);
+    ResponseEntity<String> deleteUser(Integer user_id);
 
 }

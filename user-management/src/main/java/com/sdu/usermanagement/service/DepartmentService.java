@@ -10,11 +10,11 @@ public interface DepartmentService {
     ResponseEntity<List<DepartmentDTO>> findAllDepartment();
 
 // // Find Department By Id
-    DepartmentDTO findDepartmentById(int dept_id);
+    ResponseEntity<DepartmentDTO> findDepartmentById(Integer dept_id);
 
 // Save Department
-    ResponseEntity<Void> save(DepartmentDTO departmentDTO);
+    ResponseEntity<String> saveDepartment(DepartmentDTO departmentDTO);
 
 //     void delete(int dept_id);
-    void delete(int dept_id);
+    ResponseEntity<String> deleteDepartment(Integer dept_id);
 }
