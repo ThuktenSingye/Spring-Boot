@@ -1,5 +1,6 @@
 package com.sdu.usermanagement.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -24,7 +25,11 @@ public class Section{
     @Column(name = "Section_Name")
     private String sectName;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(
+        fetch = FetchType.EAGER, 
+        cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH
+        }
+    )
     @JoinColumn(name = "Dept_Id")
     private Department department;
     
