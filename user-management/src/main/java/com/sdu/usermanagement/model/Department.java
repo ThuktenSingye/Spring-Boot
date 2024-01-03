@@ -1,5 +1,4 @@
 package com.sdu.usermanagement.model;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,5 +20,6 @@ public class Department {
     @Column(name = "Dept_Name")
     private String deptName;
 
-
+    @Column(name = "Dept_Description")
+    private String deptDescription;
 }

@@ -35,6 +35,13 @@ public class DepartmentController {
     private ResponseEntity<List<DepartmentDTO>> getAllDepartments() {
         return departmentService.findAllDepartment();
     }
+    
+ // Get All Department
+    @GetMapping("/departments/total")
+    private ResponseEntity<Long> getDepartmentCount() {
+        return departmentService.findTotalDepartmentCount();
+    }
+    
 
 // Retrieve Single Department By Id
     @GetMapping("/departments/{dept_id}")

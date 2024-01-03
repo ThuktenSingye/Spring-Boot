@@ -76,5 +76,4 @@ public class User{
     @JoinColumn(name = "Image_Id")
     private ProfileImage profileImage;
 
-
 }
