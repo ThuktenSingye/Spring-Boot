@@ -19,5 +19,12 @@ public interface UserService {
     ResponseEntity<String> deleteUser(Integer user_id);
 
     ResponseEntity<String> updateEmail(String email, Integer user_id);
+    
+    ResponseEntity<Long> getTotalUserCount();
+    
+    ResponseEntity<Long> getUserCountByGender(Integer genderId);
+
+    ResponseEntity<List<UserDTO>> getAllUserBySectionId(Integer sect_id);
+    
 
 }

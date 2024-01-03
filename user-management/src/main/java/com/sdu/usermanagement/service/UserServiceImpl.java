@@ -1,16 +1,12 @@
 package com.sdu.usermanagement.service;
 import java.io.File;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.sdu.usermanagement.dto.UserDTO;
 import com.sdu.usermanagement.model.Gender;
@@ -20,14 +16,17 @@ import com.sdu.usermanagement.repository.GenderRepository;
 import com.sdu.usermanagement.repository.SectionRepository;
 import com.sdu.usermanagement.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.extern.log4j.Log4j2;
+
 import com.sdu.usermanagement.model.Section;
 
 
 @Service
 @Transactional
+@Log4j2
 public class UserServiceImpl implements UserService{
 
-    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+    
 
     @Autowired
     private UserRepository userRepository;
@@ -83,18 +82,17 @@ public class UserServiceImpl implements UserService{
             user.setProfileImage(profileImage);
 
             User saveUser = userRepository.saveAndFlush(user);  
-            System.out.println("Save user: " + saveUser);
 
             if(saveUser== null){
                 // log the error 
-                logger.info("Saved user is null! Error while saving user");
+                log.info("Saved user is null! Error while saving user");
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
         catch(Exception e){
             // log the error
-            logger.error("Error while saving user: ", e.getMessage());
+            log.error("Error while saving user: ", e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         
@@ -104,18 +102,44 @@ public class UserServiceImpl implements UserService{
     public ResponseEntity<List<UserDTO>> findAllUser() {
        try{
             List<UserDTO> users = userRepository.findAll().stream().map(this::userEntityToDto).collect(Collectors.toList());
-            if(users== null){
-                /* Log the error */
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
+           
             return new ResponseEntity<>(users, HttpStatus.OK);
         }
         catch(Exception e){
-            logger.error("Error while retrieving all user: ", e.getMessage());
+            log.error("Error while retrieving all user: ", e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         
     }
+    
+    @Override
+    public ResponseEntity<Long> getTotalUserCount() {
+        try {
+            long totalUserCount = userRepository.count(); // Using count() to get the total number of users
+            return new ResponseEntity<>(totalUserCount, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Error while retrieving total user count: ", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    @Override
+	public ResponseEntity<Long> getUserCountByGender(Integer genderId) {
+	
+		try {
+            if (genderId == null || genderId < 0) {
+                /* Bad Request - Invalid user_id format */
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+			
+			long userByGender = userRepository.countByGender(genderId);
+			return new ResponseEntity<>(userByGender, HttpStatus.OK);
+		}
+		catch(Exception e){
+			log.error("Error while retrieving user count by gender: ", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
 
     @Override
     public ResponseEntity<UserDTO> findUserById(Integer user_id) {
@@ -125,21 +149,13 @@ public class UserServiceImpl implements UserService{
                 /* Bad Request - Invalid user_id format */
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
-            Optional<User> result = userRepository.findById(user_id);
-            UserDTO userDTO = null;
-            if(result.isPresent()){
-                userDTO = userEntityToDto(result.get());
-            }
-            else{
-                /* user not found */
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
+            UserDTO userDTO = userEntityToDto(userRepository.findById(user_id).orElseThrow());
             /* Succesful  */
             return new ResponseEntity<>(userDTO,HttpStatus.OK);
         }
         catch(Exception e){
             /* Log the errrpr */
-            logger.error("Error while retrieving user by id : ", e.getMessage());
+            log.error("Error while retrieving user by id : ", e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     
@@ -158,12 +174,9 @@ public class UserServiceImpl implements UserService{
             userRepository.deleteById(user_id);
             return new ResponseEntity<>(HttpStatus.OK);
         }
-        catch(EmptyResultDataAccessException e){
-            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
-        }
         catch(Exception e){
             /* Log the error */
-            logger.error("Error while deleting user : ", e.getMessage());
+            log.error("Error while deleting user : ", e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         
@@ -219,6 +232,21 @@ public class UserServiceImpl implements UserService{
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @Override
+    public ResponseEntity<List<UserDTO>> getAllUserBySectionId(Integer sect_id) {
+        try{
+            List<UserDTO> users = userRepository.findBySectionSectId(sect_id).stream().map(this::userEntityToDto).collect(Collectors.toList());
+        
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        }
+        catch(Exception e){
+            log.error("Error while retrieving sections user: ", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
   
     
 }
