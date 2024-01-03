@@ -36,12 +36,22 @@ public class UserController {
     private ResponseEntity<List<UserDTO>> getAllUser() {
         return userService.findAllUser();
     }
-
+    
+    @GetMapping("/users/total")
+    private ResponseEntity<Long> getAllUserCount() {
+        return userService.getTotalUserCount();
+    }
+    
+    @GetMapping("/users/total/{genderId}")
+    private ResponseEntity<Long> getUserByGender(@PathVariable Integer genderId) {
+        return userService.getUserCountByGender(genderId);
+    }
+    
+    
     /* Retrieve single user */
     @GetMapping("/users/{user_id}")
     private ResponseEntity<UserDTO> getUserById(@PathVariable Integer user_id){
        return userService.findUserById(user_id);
-
     }
     /* Delete user */
     @DeleteMapping("users/{user_id}")
@@ -60,6 +70,9 @@ public class UserController {
         return userService.updateEmail(userDTO.getEmail(), userDTO.getUserId());
     }
 
-    
+    @GetMapping("/sections/{sect_id}/users")
+    private ResponseEntity<List<UserDTO>> getSectionUsers(@PathVariable Integer sect_id){
+        return userService.getAllUserBySectionId(sect_id);
+    }
 
 }
