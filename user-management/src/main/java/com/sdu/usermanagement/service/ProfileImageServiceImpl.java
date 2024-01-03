@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,8 +16,11 @@ import com.sdu.usermanagement.model.User;
 import com.sdu.usermanagement.repository.ProfileImageRepository;
 import com.sdu.usermanagement.repository.UserRepository;
 
+import lombok.extern.log4j.Log4j2;
+
 
 @Service
+@Log4j2
 public class ProfileImageServiceImpl implements ProfileImageServie{
 
     @Autowired
@@ -29,7 +30,7 @@ public class ProfileImageServiceImpl implements ProfileImageServie{
     private UserRepository userRepository;
 
 
-    private final String FOLDER_PATH ="/home/thukten/Desktop/Spring-Boot/user-management/src/main/resources/UserProfile/";
+    private final String FOLDER_PATH ="/home/thukten/Desktop/UserProfileImage/";
 
 
     @Override
@@ -46,15 +47,7 @@ public class ProfileImageServiceImpl implements ProfileImageServie{
                 return new ResponseEntity<>("Users not found!", HttpStatus.NOT_FOUND);
             }
 
-            Optional<User> result = userRepository.findById(user_id);
-            User user = null;
-            if(result.isPresent()){
-                user = result.get();
-            }
-            else{
-                /* user not found */
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
+            User user = userRepository.findById(user_id).orElseThrow();
             // get the image id
             int image_id = user.getProfileImage().getImageId();
             String existingProfileImagePath = FOLDER_PATH + user.getProfileImage().getImageName();
@@ -71,13 +64,12 @@ public class ProfileImageServiceImpl implements ProfileImageServie{
              /* Delete the existing file */
             Files.deleteIfExists(Paths.get(existingProfileImagePath));
             /* Update the profile image profile */
-            ProfileImage uploadedProfile  = profileImageRepository.save(profileImage); 
+            ProfileImage uploadedProfile  = profileImageRepository.saveAndFlush(profileImage); 
             
             profileImageFile.transferTo(new File(filePath));
-            /* Updated the user table */
             // user.setProfileImage(profileImage);
             if(uploadedProfile == null){
-                return new ResponseEntity<>("Uploaded Profile is null",HttpStatus.INTERNAL_SERVER_ERROR);
+                return new ResponseEntity<>("Save or Uploaded Profile is null",HttpStatus.INTERNAL_SERVER_ERROR);
             }
             
             return new ResponseEntity<>(HttpStatus.CREATED);
@@ -92,22 +84,16 @@ public class ProfileImageServiceImpl implements ProfileImageServie{
     @Override
     public ResponseEntity<byte[]> getProfileImage(Integer user_id) {
         try {
-            Optional<User> result = userRepository.findById(user_id);
-            User user = null;
-
-            if(result != null){
-                user = result.get();
-            }
-            else{
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
+            User user = userRepository.findById(user_id).orElseThrow();
 
             String filePath = user.getProfileImage().getImagePath();
+            System.out.println("File path: " + filePath);
             
             byte[] images = Files.readAllBytes(Paths.get(filePath));
 
             if(images == null){
                 // Cannot read image byte
+                log.info("Read image file is null");
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
             HttpHeaders headers = new HttpHeaders();

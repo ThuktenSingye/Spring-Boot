@@ -1,28 +1,23 @@
 package com.sdu.usermanagement.service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.sdu.usermanagement.dto.GenderDTO;
 import com.sdu.usermanagement.model.Gender;
 import com.sdu.usermanagement.repository.GenderRepository;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.log4j.Log4j2;
 
 @Service
 @Transactional
+@Log4j2
 public class GenderServiceImpl implements GenderService{
-
-    private static final Logger logger = LoggerFactory.getLogger(GenderServiceImpl.class);
-
 
     @Autowired
     private GenderRepository genderRepository;
@@ -31,14 +26,10 @@ public class GenderServiceImpl implements GenderService{
     public ResponseEntity<List<GenderDTO>> findAllGender() {
        try{
             List<GenderDTO> genderDTOs  = genderRepository.findAll().stream().map(this::genderEntityToDto).collect(Collectors.toList());
-            if(genderDTOs == null){
-                /* Log the error */
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
             return new ResponseEntity<>(genderDTOs, HttpStatus.OK);
         }
         catch(Exception e){
-            logger.error("Error while finding all gender: ", e.getMessage());
+            log.error("Error while finding all gender: ", e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -51,21 +42,13 @@ public class GenderServiceImpl implements GenderService{
                 /* Bad Request - Invalid user_id format */
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
-            Optional<Gender> result = genderRepository.findById(gender_id);
-            GenderDTO genderDTO = null;
-            if(result.isPresent()){
-                genderDTO = genderEntityToDto(result.get());
-            }
-            else{
-                /* user not found */
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
+            GenderDTO genderDTO = genderEntityToDto(genderRepository.findById(gender_id).orElseThrow());
             /* Succesful  */
             return new ResponseEntity<>(genderDTO ,HttpStatus.OK);
         }
         catch(Exception e){
             /* Log the errrpr */
-            logger.error("Error while finding  gender by id: ", e.getMessage());
+            log.error("Error while finding  gender by id: ", e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -73,21 +56,16 @@ public class GenderServiceImpl implements GenderService{
     @Override
     public ResponseEntity<String> saveGender(GenderDTO genderDTO) {
          try{
-            if(genderDTO == null){
-                return new ResponseEntity<>("Missing Section Parameter ", HttpStatus.BAD_REQUEST);
-            }
-
-            Gender saveGender = genderRepository.saveAndFlush(genderDtoToEntity(genderDTO));
-            if(saveGender == null){
+            if(genderRepository.saveAndFlush(genderDtoToEntity(genderDTO)) == null){
                 /* Log the error */
-                logger.info("SavedGender is null! Error while saving");
+                log.info("The saved entity is null");
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
         catch(Exception e){
-            logger.error("Error while adding/updating gender: ", e.getMessage());
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            log.error("Error while adding/updating gender: ", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -105,12 +83,10 @@ public class GenderServiceImpl implements GenderService{
             genderRepository.deleteById(gender_id);
             return new ResponseEntity<>(HttpStatus.OK);
         }
-        catch(EmptyResultDataAccessException e){
-            return new ResponseEntity<>("Gender not found", HttpStatus.NOT_FOUND);
-        }
+    
         catch(Exception e){
             /* Log the error */
-            logger.error("Error while deleting gender: ", e.getMessage());
+            log.error("Error while deleting gender: ", e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

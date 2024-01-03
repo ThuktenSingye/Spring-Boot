@@ -17,4 +17,6 @@ public interface DepartmentService {
 
 //     void delete(int dept_id);
     ResponseEntity<String> deleteDepartment(Integer dept_id);
+    
+    ResponseEntity<Long> findTotalDepartmentCount();
 }
