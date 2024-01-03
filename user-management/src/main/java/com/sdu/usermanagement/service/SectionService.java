@@ -15,4 +15,6 @@ public interface SectionService {
     ResponseEntity<String> saveSection(SectionDTO sectionDTO);
     /* Delete Section */
     ResponseEntity<String> deleteSection(Integer sect_id);
+    
+   ResponseEntity<List<SectionDTO>> findSectionByDepartmentId(Integer deptId);
 }
