@@ -34,7 +34,12 @@ public class SectionController {
         return sectionService.findAllSection();
         
     }
-
+    
+   @GetMapping("departments/{deptId}/sections")
+   public ResponseEntity<List<SectionDTO>> getSectionsByDepartment(@PathVariable Integer deptId) {
+       return sectionService.findSectionByDepartmentId(deptId);
+   }
+    
     /* Get services by id */
     @GetMapping("/sections/{sect_id}")
      private ResponseEntity<SectionDTO> getSectionById(@PathVariable Integer sect_id){
