@@ -28,7 +28,6 @@ import com.sdu.usermanagement.model.Section;
 @Log4j2
 public class UserServiceImpl implements UserService{
 
-    
 
     @Autowired
     private UserRepository userRepository;
@@ -47,7 +46,7 @@ public class UserServiceImpl implements UserService{
     public ResponseEntity<String> save(UserDTO userDTO, MultipartFile profileImageFile) {
 
         String filePath = Paths.get(FOLDER_PATH, profileImageFile.getOriginalFilename()).toString();
-      
+        log.info("File path:"+ filePath);
         try{
             if(userDTO.getGender() == null){
                 return new ResponseEntity<>("Missing Gender Parameter", HttpStatus.BAD_REQUEST);
