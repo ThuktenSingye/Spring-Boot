@@ -16,37 +16,37 @@ import com.sdu.usermanagement.dto.SectionDTO;
 import com.sdu.usermanagement.service.SectionService;
 
 @RestController
-@RequestMapping("v1/api")
+@RequestMapping("/sections")
 public class SectionController {
 
     @Autowired
     private SectionService sectionService;
 
     /* Add new Service */
-    @PostMapping("/sections")
+    @PostMapping
     public ResponseEntity<String> addService(@RequestBody SectionDTO sectionDTO){
         System.out.println(sectionDTO);
         return sectionService.saveSection(sectionDTO);
     }
     /* Get All Service  */
-    @GetMapping("/sections")
+    @GetMapping
     private ResponseEntity<List<SectionDTO>> getAllSection() {
         return sectionService.findAllSection();
         
     }
     
-   @GetMapping("departments/{deptId}/sections")
+   @GetMapping("/departments/{deptId}")
    public ResponseEntity<List<SectionDTO>> getSectionsByDepartment(@PathVariable Integer deptId) {
        return sectionService.findSectionByDepartmentId(deptId);
    }
     
     /* Get services by id */
-    @GetMapping("/sections/{sect_id}")
+    @GetMapping("/{sect_id}")
      private ResponseEntity<SectionDTO> getSectionById(@PathVariable Integer sect_id){
         return sectionService.findSectionById(sect_id);
     }
 
-    @DeleteMapping("/sections/{sect_id}")
+    @DeleteMapping("/{sect_id}")
     private ResponseEntity<String> deleteService(@PathVariable Integer sect_id){
         return sectionService.deleteSection(sect_id);
     }

@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.sdu.usermanagement.service.ProfileImageServie;
 
 @RestController
-@RequestMapping("v1/api/profile_images")
+@RequestMapping("/profile_images")
 public class ProfileImageController {
     
     @Autowired

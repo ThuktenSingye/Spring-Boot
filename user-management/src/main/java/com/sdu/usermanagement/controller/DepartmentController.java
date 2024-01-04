@@ -17,47 +17,48 @@ import com.sdu.usermanagement.dto.DepartmentDTO;
 import com.sdu.usermanagement.service.DepartmentService;
 
 @RestController
-@RequestMapping("v1/api")
+// @RequestMapping("v1/api")
+@RequestMapping("/departments")
 public class DepartmentController {
 // Define request and response endpoint
     @Autowired
     private DepartmentService departmentService;
 
 // Adding Department
-    @PostMapping("/departments")
+    @PostMapping
     private ResponseEntity<String> addDepartment(@RequestBody DepartmentDTO departmentDTO){
         return departmentService.saveDepartment(departmentDTO);
 
     }
 
 // Get All Department
-    @GetMapping("/departments")
+    @GetMapping
     private ResponseEntity<List<DepartmentDTO>> getAllDepartments() {
         return departmentService.findAllDepartment();
     }
     
  // Get All Department
-    @GetMapping("/departments/total")
+    @GetMapping("/total")
     private ResponseEntity<Long> getDepartmentCount() {
         return departmentService.findTotalDepartmentCount();
     }
     
 
 // Retrieve Single Department By Id
-    @GetMapping("/departments/{dept_id}")
+    @GetMapping("/{dept_id}")
     private ResponseEntity<DepartmentDTO> getDepartmentById(@PathVariable Integer dept_id){
         return departmentService.findDepartmentById(dept_id);
 
     }
 
 // Updating the department
-    @PutMapping("/departments")
+    @PutMapping
     private ResponseEntity<String> updateDepartment(@RequestBody DepartmentDTO departmentDTO){
         return departmentService.saveDepartment(departmentDTO);
     }
 
 // Deleting the department
-    @DeleteMapping("/departments/{dept_id}")
+    @DeleteMapping("/{dept_id}")
     private ResponseEntity<String> deleteDepartment(@PathVariable Integer dept_id){
         return departmentService.deleteDepartment(dept_id);
     }
