@@ -54,11 +54,11 @@ public class User{
             CascadeType.MERGE
         }
     )
-    @JoinColumn(name = "GenderId")
+    @JoinColumn(name = "Gender_Id")
     private Gender gender;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "AddressId")
+    @JoinColumn(name = "Address_Id")
     private Address address;
 
     @ManyToOne(
@@ -69,11 +69,11 @@ public class User{
             CascadeType.MERGE
         }
     )
-    @JoinColumn(name = "SectionId")
+    @JoinColumn(name = "Section_Id")
     private Section section;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ImageId")
+    @JoinColumn(name = "Image_Id")
     private ProfileImage profileImage;
 
 }
