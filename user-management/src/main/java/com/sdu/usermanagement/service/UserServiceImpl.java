@@ -1,8 +1,10 @@
 package com.sdu.usermanagement.service;
 import java.io.File;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -37,13 +39,14 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private SectionRepository sectionRepository;
 
-    private final String FOLDER_PATH ="/home/thukten/Desktop/Spring-Boot/user-management/src/main/resources/UserProfile/";
+    @Value("${file.upload-dir}")
+    private String FOLDER_PATH;
 
 
     @Override
     public ResponseEntity<String> save(UserDTO userDTO, MultipartFile profileImageFile) {
 
-        String filePath = FOLDER_PATH + profileImageFile.getOriginalFilename();
+        String filePath = Paths.get(FOLDER_PATH, profileImageFile.getOriginalFilename()).toString();
       
         try{
             if(userDTO.getGender() == null){
