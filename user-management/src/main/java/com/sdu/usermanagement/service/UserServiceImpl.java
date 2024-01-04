@@ -1,7 +1,10 @@
 package com.sdu.usermanagement.service;
 import java.io.File;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,10 +48,9 @@ public class UserServiceImpl implements UserService{
     @Override
     public ResponseEntity<String> save(UserDTO userDTO, MultipartFile profileImageFile) {
 
-        String filePath = Paths.get(FOLDER_PATH, profileImageFile.getOriginalFilename()).toString();
+        String filePath = Paths.get(FOLDER_PATH,generateUniqueFileName(profileImageFile.getOriginalFilename())).toString();
         log.info("File path:"+ filePath);
         try{
-
             // Create the directory if it doesn't exist
             File directory = new File(FOLDER_PATH);
             if (!directory.exists()) {
@@ -196,7 +198,50 @@ public class UserServiceImpl implements UserService{
         }
         
     }
-        /* Method to convert User Entity to User DTO */
+       
+    @Override
+    public ResponseEntity<String> updateEmail(String email, Integer user_id) {
+
+        try{
+            if(email == null || user_id == null || user_id < 0){
+                return new ResponseEntity<>("Invalid/Null Email and User Id", HttpStatus.BAD_REQUEST);
+            }
+            userRepository.updateUserEmail(email, user_id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public ResponseEntity<List<UserDTO>> getAllUserBySectionId(Integer sect_id) {
+        try{
+            List<UserDTO> users = userRepository.findBySectionSectId(sect_id).stream().map(this::userEntityToDto).collect(Collectors.toList());
+        
+            return new ResponseEntity<>(users, HttpStatus.OK);
+        }
+        catch(Exception e){
+            log.error("Error while retrieving sections user: ", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    private String generateUniqueFileName(String originalFileName) {
+        // Append a timestamp or a random string to the original file name
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        String randomString = UUID.randomUUID().toString().replace("-", "");
+        
+        // Extract the file extension from the original file name
+        int dotIndex = originalFileName.lastIndexOf('.');
+        String fileExtension = (dotIndex > 0) ? originalFileName.substring(dotIndex) : "";
+        
+        // Concatenate the timestamp, random string, and file extension to create a unique file name
+        return timestamp + "_" + randomString + fileExtension;
+    }
+
+     /* Method to convert User Entity to User DTO */
     private UserDTO userEntityToDto(User user){
         UserDTO userDTO = new UserDTO();
         userDTO.setUserId(user.getUserId());
@@ -232,35 +277,6 @@ public class UserServiceImpl implements UserService{
         user.setProfileImage(userDTO.getProfileImage());
         return user;
     }
-
-    @Override
-    public ResponseEntity<String> updateEmail(String email, Integer user_id) {
-
-        try{
-            if(email == null || user_id == null || user_id < 0){
-                return new ResponseEntity<>("Invalid/Null Email and User Id", HttpStatus.BAD_REQUEST);
-            }
-            userRepository.updateUserEmail(email, user_id);
-            return new ResponseEntity<>(HttpStatus.OK);
-        }
-        catch(Exception e){
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @Override
-    public ResponseEntity<List<UserDTO>> getAllUserBySectionId(Integer sect_id) {
-        try{
-            List<UserDTO> users = userRepository.findBySectionSectId(sect_id).stream().map(this::userEntityToDto).collect(Collectors.toList());
-        
-            return new ResponseEntity<>(users, HttpStatus.OK);
-        }
-        catch(Exception e){
-            log.error("Error while retrieving sections user: ", e.getMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
 
   
     

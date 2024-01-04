@@ -4,10 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +16,7 @@ import com.sdu.usermanagement.model.ProfileImage;
 import com.sdu.usermanagement.model.User;
 import com.sdu.usermanagement.repository.ProfileImageRepository;
 import com.sdu.usermanagement.repository.UserRepository;
+import com.sdu.usermanagement.utility.FileNameGenerator;
 
 import lombok.extern.log4j.Log4j2;
 
@@ -34,6 +31,9 @@ public class ProfileImageServiceImpl implements ProfileImageServie{
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private FileNameGenerator fileNameGenerator;
+
 
     @Value("${file.upload-dir}")
     private String FOLDER_PATH;
@@ -41,8 +41,7 @@ public class ProfileImageServiceImpl implements ProfileImageServie{
 
     @Override
     public ResponseEntity<String> uploadImage(Integer user_id, MultipartFile profileImageFile) {
-
-        String filePath = Paths.get(FOLDER_PATH,generateUniqueFileName(profileImageFile.getOriginalFilename())).toString();
+        String filePath = Paths.get(FOLDER_PATH, fileNameGenerator.generateUniqueFileName(profileImageFile.getOriginalFilename())).toString();
         log.info("File path:"+ filePath);
         user_id = Integer.valueOf(user_id);
         
@@ -130,17 +129,6 @@ public class ProfileImageServiceImpl implements ProfileImageServie{
     }
 
 
-    private String generateUniqueFileName(String originalFileName) {
-        // Append a timestamp or a random string to the original file name
-        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-        String randomString = UUID.randomUUID().toString().replace("-", "");
-        
-        // Extract the file extension from the original file name
-        int dotIndex = originalFileName.lastIndexOf('.');
-        String fileExtension = (dotIndex > 0) ? originalFileName.substring(dotIndex) : "";
-        
-        // Concatenate the timestamp, random string, and file extension to create a unique file name
-        return timestamp + "_" + randomString + fileExtension;
-    }
+    
     
 }
