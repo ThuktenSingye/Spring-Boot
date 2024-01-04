@@ -75,4 +75,9 @@ public class UserController {
         return userService.getAllUserBySectionId(sect_id);
     }
 
+    @GetMapping("/departments/{dept_Id}")
+    private ResponseEntity<List<UserDTO>> getAllDepartmentUser(@PathVariable Integer dept_Id){
+        return userService.getAllUserByDepartmentId(dept_Id);
+    }
+
 }

@@ -53,7 +53,7 @@ public class DepartmentServiceImpl implements DepartmentService{
             return new ResponseEntity<>(departmentDTOs, HttpStatus.OK);
         }
         catch(Exception e){
-            log.error("Error while finding the list of department: ", e.getMessage());
+            log.error("Error while finding the list of department: "  + e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -72,7 +72,7 @@ public class DepartmentServiceImpl implements DepartmentService{
         }
         catch(Exception e){
             /* Log the errrpr */
-            log.error("Error while finding department by id:", e.getMessage());
+            log.error("Error while finding department by id:" + e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -94,7 +94,7 @@ public class DepartmentServiceImpl implements DepartmentService{
         }
         catch(Exception e){
             /* Log the error */
-            log.error("Error while deleting department", e.getMessage());
+            log.error("Error while deleting department" + e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -127,9 +127,13 @@ public class DepartmentServiceImpl implements DepartmentService{
             long totalDepartmentCount = departmentRepository.count(); // Using count() to get the total department count
             return new ResponseEntity<>(totalDepartmentCount, HttpStatus.OK);
         } catch (Exception e) {
-            log.error("Error while retrieving total department count: ", e.getMessage());
+            log.error("Error while retrieving total department count: "+ e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 	}
+
+
+
+    
 
 }

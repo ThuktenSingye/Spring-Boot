@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import com.sdu.usermanagement.dto.DepartmentDTO;
 
 
+
 public interface DepartmentService {
 // List all Department
     ResponseEntity<List<DepartmentDTO>> findAllDepartment();
@@ -19,4 +20,6 @@ public interface DepartmentService {
     ResponseEntity<String> deleteDepartment(Integer dept_id);
     
     ResponseEntity<Long> findTotalDepartmentCount();
+
+    
 }

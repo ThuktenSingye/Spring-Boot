@@ -25,6 +25,7 @@ public interface UserService {
     ResponseEntity<Long> getUserCountByGender(Integer genderId);
 
     ResponseEntity<List<UserDTO>> getAllUserBySectionId(Integer sect_id);
-    
 
+    ResponseEntity<List<UserDTO>> getAllUserByDepartmentId(Integer dept_id);
+    
 }

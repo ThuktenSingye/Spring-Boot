@@ -229,6 +229,20 @@ public class UserServiceImpl implements UserService{
         }
     
     }
+
+    @Override
+    public ResponseEntity<List<UserDTO>> getAllUserByDepartmentId(Integer dept_id){
+
+        try{
+            List<UserDTO> userDTOs = userRepository.findAllDepartmentUser(dept_id).stream().map(this::userEntityToDto).collect(Collectors.toList());
+            log.info(userDTOs.size());
+            return new ResponseEntity<>(userDTOs, HttpStatus.OK);
+        }
+        catch(Exception e){
+            log.error("Error while finding the list of department user: " + e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
      /* Method to convert User Entity to User DTO */
     private UserDTO userEntityToDto(User user){
         UserDTO userDTO = new UserDTO();
