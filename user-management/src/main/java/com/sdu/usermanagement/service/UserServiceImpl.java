@@ -48,6 +48,18 @@ public class UserServiceImpl implements UserService{
         String filePath = Paths.get(FOLDER_PATH, profileImageFile.getOriginalFilename()).toString();
         log.info("File path:"+ filePath);
         try{
+
+            // Create the directory if it doesn't exist
+            File directory = new File(FOLDER_PATH);
+            if (!directory.exists()) {
+                if (directory.mkdirs()) {
+                    log.info("Directory created successfully: {}", FOLDER_PATH);
+                } else {
+                    log.error("Failed to create directory: {}", FOLDER_PATH);
+                    return new ResponseEntity<>("Failed to create directory", HttpStatus.INTERNAL_SERVER_ERROR);
+                }
+            }
+            
             if(userDTO.getGender() == null){
                 return new ResponseEntity<>("Missing Gender Parameter", HttpStatus.BAD_REQUEST);
             }
