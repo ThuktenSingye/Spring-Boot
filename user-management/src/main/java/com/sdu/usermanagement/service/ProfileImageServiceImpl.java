@@ -4,6 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -38,7 +42,7 @@ public class ProfileImageServiceImpl implements ProfileImageServie{
     @Override
     public ResponseEntity<String> uploadImage(Integer user_id, MultipartFile profileImageFile) {
 
-        String filePath = Paths.get(FOLDER_PATH, profileImageFile.getOriginalFilename()).toString();
+        String filePath = Paths.get(FOLDER_PATH,generateUniqueFileName(profileImageFile.getOriginalFilename())).toString();
         log.info("File path:"+ filePath);
         user_id = Integer.valueOf(user_id);
         
@@ -123,6 +127,20 @@ public class ProfileImageServiceImpl implements ProfileImageServie{
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         
+    }
+
+
+    private String generateUniqueFileName(String originalFileName) {
+        // Append a timestamp or a random string to the original file name
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
+        String randomString = UUID.randomUUID().toString().replace("-", "");
+        
+        // Extract the file extension from the original file name
+        int dotIndex = originalFileName.lastIndexOf('.');
+        String fileExtension = (dotIndex > 0) ? originalFileName.substring(dotIndex) : "";
+        
+        // Concatenate the timestamp, random string, and file extension to create a unique file name
+        return timestamp + "_" + randomString + fileExtension;
     }
     
 }
