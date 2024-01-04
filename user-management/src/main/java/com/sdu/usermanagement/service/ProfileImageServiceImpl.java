@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,13 +31,15 @@ public class ProfileImageServiceImpl implements ProfileImageServie{
     private UserRepository userRepository;
 
 
-    private final String FOLDER_PATH ="/home/thukten/Desktop/UserProfileImage/";
+    @Value("${file.upload-dir}")
+    private String FOLDER_PATH;
 
 
     @Override
     public ResponseEntity<String> uploadImage(Integer user_id, MultipartFile profileImageFile) {
 
-        String filePath = FOLDER_PATH + profileImageFile.getOriginalFilename();
+        String filePath = Paths.get(FOLDER_PATH, profileImageFile.getOriginalFilename()).toString();
+        log.info("File path:"+ filePath);
         user_id = Integer.valueOf(user_id);
         
         try{    
@@ -87,7 +90,7 @@ public class ProfileImageServiceImpl implements ProfileImageServie{
             User user = userRepository.findById(user_id).orElseThrow();
 
             String filePath = user.getProfileImage().getImagePath();
-            System.out.println("File path: " + filePath);
+            log.info("File path: " + filePath);
             
             byte[] images = Files.readAllBytes(Paths.get(filePath));
 
