@@ -58,6 +58,7 @@ public class UserServiceImpl implements UserService{
             if (gender == null) {
                 return new ResponseEntity<>("Gender not found", HttpStatus.BAD_REQUEST);
             }
+
             Section section = sectionRepository.findById(userDTO.getSection().getSectId()).orElse(null);
             
             if (section == null) {
@@ -94,7 +95,7 @@ public class UserServiceImpl implements UserService{
         }
         catch(Exception e){
             // log the error
-            log.error("Error while saving user: ", e.getMessage());
+            log.error("Error while saving user: " + e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         
