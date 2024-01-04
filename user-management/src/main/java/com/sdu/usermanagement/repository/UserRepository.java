@@ -26,6 +26,6 @@ public interface UserRepository extends JpaRepository<User, Integer>{
         "JOIN address a ON u.Address_Id = a.Address_Id " +
         "WHERE d.Dept_Id = :deptId",
         nativeQuery = true)
-    List<Object[]> findAllDepartmentUserDetails(@Param("deptId") Integer deptId);
+    List<User> findAllDepartmentUser(@Param("deptId") Integer deptId);
     
 }
