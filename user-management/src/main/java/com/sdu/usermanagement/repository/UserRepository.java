@@ -18,11 +18,14 @@ public interface UserRepository extends JpaRepository<User, Integer>{
     @Query(value = "SELECT COUNT(*) FROM user u JOIN gender g ON u.Gender_Id = g.Gender_Id WHERE u.Gender_Id= :genderId", nativeQuery = true)
     long countByGender(@Param("genderId") Integer genderId);
 
-    @Query(value = "SELECT * FROM user " +
-        "JOIN section ON user.Section_Id = section.Section_Id " +
-        "JOIN department ON section.Dept_Id = department.Dept_Id " +
-        "WHERE department.Dept_Id = :deptId",
-    nativeQuery = true)
-    List<User> findAllDepartmentUser(@Param("deptId") Integer deptId);
+    @Query(value = "SELECT u.*, g.*, s.*, a.*, d.* " +
+        "FROM user u " +
+        "JOIN section s ON u.Section_Id = s.Section_Id " +
+        "JOIN department d ON s.Dept_Id = d.Dept_Id " +
+        "JOIN gender g ON u.Gender_Id = g.Gender_Id " +
+        "JOIN address a ON u.Address_Id = a.Address_Id " +
+        "WHERE d.Dept_Id = :deptId",
+        nativeQuery = true)
+    List<Object[]> findAllDepartmentUserDetails(@Param("deptId") Integer deptId);
     
 }
