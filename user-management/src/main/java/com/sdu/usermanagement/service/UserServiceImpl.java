@@ -20,6 +20,8 @@ import com.sdu.usermanagement.model.User;
 import com.sdu.usermanagement.repository.GenderRepository;
 import com.sdu.usermanagement.repository.SectionRepository;
 import com.sdu.usermanagement.repository.UserRepository;
+import com.sdu.usermanagement.utility.FileNameGenerator;
+
 import jakarta.transaction.Transactional;
 import lombok.extern.log4j.Log4j2;
 
@@ -41,6 +43,9 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private SectionRepository sectionRepository;
 
+    @Autowired
+    private FileNameGenerator fileNameGenerator;
+
     @Value("${file.upload-dir}")
     private String FOLDER_PATH;
 
@@ -48,7 +53,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public ResponseEntity<String> save(UserDTO userDTO, MultipartFile profileImageFile) {
 
-        String filePath = Paths.get(FOLDER_PATH,generateUniqueFileName(profileImageFile.getOriginalFilename())).toString();
+        String filePath = Paths.get(FOLDER_PATH, fileNameGenerator.generateUniqueFileName(profileImageFile.getOriginalFilename())).toString();
         log.info("File path:"+ filePath);
         try{
             // Create the directory if it doesn't exist
@@ -225,21 +230,7 @@ public class UserServiceImpl implements UserService{
             log.error("Error while retrieving sections user: ", e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
-
-
-    private String generateUniqueFileName(String originalFileName) {
-        // Append a timestamp or a random string to the original file name
-        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-        String randomString = UUID.randomUUID().toString().replace("-", "");
-        
-        // Extract the file extension from the original file name
-        int dotIndex = originalFileName.lastIndexOf('.');
-        String fileExtension = (dotIndex > 0) ? originalFileName.substring(dotIndex) : "";
-        
-        // Concatenate the timestamp, random string, and file extension to create a unique file name
-        return timestamp + "_" + randomString + fileExtension;
-    }
+    
 
      /* Method to convert User Entity to User DTO */
     private UserDTO userEntityToDto(User user){
