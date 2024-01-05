@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +21,7 @@ public class ProfileImageController {
     @Autowired
     private ProfileImageServie profileImageServie;
 
-    @PutMapping("/{user_id}")
+    @PostMapping("/{user_id}")
     private ResponseEntity<String> uploadProfile(
         @RequestPart(name = "profileImageFile", required = true) MultipartFile profileImageFile,@PathVariable Integer user_id){
         return profileImageServie.uploadImage(Integer.valueOf(user_id), profileImageFile);
