@@ -34,7 +34,7 @@ public class DepartmentServiceImpl implements DepartmentService{
     @Autowired
     private FileNameGenerator fileNameGenerator;
     
-    @Value("${department-profile.upload-dir}")
+    @Value("${department-image.upload-dir}")
     private String FOLDER_PATH;
 
     private String filePath;
