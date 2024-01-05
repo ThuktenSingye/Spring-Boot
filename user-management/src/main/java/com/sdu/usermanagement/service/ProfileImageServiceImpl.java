@@ -123,7 +123,7 @@ public class ProfileImageServiceImpl implements ProfileImageServie{
 
             return new ResponseEntity<>(images, headers, HttpStatus.OK);
            
-        } catch (IOException e) {
+        } catch (Exception e) {
             // Handle the IOException
             log.error("Error while fetching user image: " + e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
