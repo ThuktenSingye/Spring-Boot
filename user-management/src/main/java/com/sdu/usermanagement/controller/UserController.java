@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.sdu.usermanagement.dto.UserDTO;
 import com.sdu.usermanagement.service.UserService;
-import org.springframework.http.MediaType;
+// import org.springframework.http.MediaType;
 
 @RestController
 @RequestMapping("/users")
@@ -27,7 +27,7 @@ public class UserController {
     private UserService userService;
 
     // Adding user
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<String> addUser(
         @RequestPart(name = "user", required = true) UserDTO userDTO,
         @RequestPart(value = "profileImageFile", required = false) MultipartFile profileImageFile) {
