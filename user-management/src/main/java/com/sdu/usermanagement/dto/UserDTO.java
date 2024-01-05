@@ -14,6 +14,7 @@ import lombok.Data;
 public class UserDTO {
     private int userId;
     private long cidNo;
+    private int employeeId;
     private String firstName;
     private String middleName;
     private String lastName;

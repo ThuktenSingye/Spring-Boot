@@ -27,6 +27,9 @@ public class User{
     @Column(name = "CID_No")
     private long cidNo;
 
+    @Column(name = "Employee_Id")
+    private int employeeId;
+
     @Column(name = "FName")
     private String firstName;
 
