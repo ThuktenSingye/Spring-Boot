@@ -1,15 +1,21 @@
 package com.sdu.usermanagement.service;
 
+import java.io.File;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.sdu.usermanagement.dto.DepartmentDTO;
 import com.sdu.usermanagement.model.Department;
+import com.sdu.usermanagement.model.DepartmentImage;
 import com.sdu.usermanagement.repository.DepartmentRepository;
+import com.sdu.usermanagement.utility.FileNameGenerator;
 
 import jakarta.transaction.Transactional;
 
@@ -25,11 +31,50 @@ public class DepartmentServiceImpl implements DepartmentService{
     @Autowired
     private DepartmentRepository departmentRepository;
 
+    @Autowired
+    private FileNameGenerator fileNameGenerator;
+    
+    @Value("${department-profile.upload-dir}")
+    private String FOLDER_PATH;
+
+    private String filePath;
+
+
     @Override
-    public ResponseEntity<String> saveDepartment(DepartmentDTO departmentDTO) {
+    public ResponseEntity<String> saveDepartment(DepartmentDTO departmentDTO, MultipartFile departmentImageFile) {
 
         try{
-            if(departmentRepository.saveAndFlush(dtoToEntity(departmentDTO)) == null){
+            
+            DepartmentImage departmentImage = null;
+
+            if(departmentImageFile != null){
+
+                filePath = Paths.get(FOLDER_PATH, fileNameGenerator.generateUniqueFileName(departmentImageFile.getOriginalFilename())).toString();
+                log.info("File path:"+ filePath);
+                    // Create the directory if it doesn't exist
+                File directory = new File(FOLDER_PATH);
+                if (!directory.exists()) {
+                    if (directory.mkdirs()) {
+                        log.info("Directory created successfully: {}", FOLDER_PATH);
+                    } else {
+                        log.error("Failed to create directory: {}", FOLDER_PATH);
+                        return new ResponseEntity<>("Failed to create directory", HttpStatus.INTERNAL_SERVER_ERROR);
+                    }
+                }
+
+                departmentImage = DepartmentImage.builder()
+                .deptImageName(departmentImageFile.getOriginalFilename())
+                .deptImageType(departmentImageFile.getContentType())
+                .deptImagePath(filePath)
+                .build();
+                departmentImageFile.transferTo(new File(filePath));
+
+            }
+
+            Department department = dtoToEntity(departmentDTO);
+            department.setDepartmentImage(departmentImage);
+
+            if(departmentRepository.saveAndFlush(department) == null){
                 log.info("[] returned value");
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
