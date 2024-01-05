@@ -111,10 +111,14 @@ public class ProfileImageServiceImpl implements ProfileImageServie{
             else if ("image/jpeg".equals(imageType)) {
                 headers.setContentType(MediaType.IMAGE_JPEG);
             } 
+            else if ("image/jpg".equals(imageType)) {
+                headers.setContentType(MediaType.IMAGE_JPEG);
+            } 
             else if ("image/gif".equals(imageType)) {
                 headers.setContentType(MediaType.IMAGE_GIF);
             } 
             else{
+                headers.setContentType(MediaType.J);
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
 
