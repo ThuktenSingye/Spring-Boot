@@ -30,7 +30,7 @@ public class UserController {
     public ResponseEntity<String> addUser(
         @RequestPart(name = "user", required = true) UserDTO userDTO,
         @RequestPart(value = "profileImageFile", required = false) MultipartFile profileImageFile) {
-        return userService.save(userDTO, profileImageFile);
+        return userService.saveUser(userDTO, profileImageFile);
        
     }
     
@@ -48,6 +48,14 @@ public class UserController {
     private ResponseEntity<Long> getUserByGender(@PathVariable Integer genderId) {
         return userService.getUserCountByGender(genderId);
     }
+
+    @PutMapping
+    public ResponseEntity<String> updateUser(
+        @RequestPart(name = "user", required = true) UserDTO userDTO,
+        @RequestPart(value = "profileImageFile", required = false) MultipartFile profileImageFile) {
+        return userService.saveUser(userDTO, profileImageFile);
+       
+    }
     
     
     /* Retrieve single user */
@@ -61,11 +69,7 @@ public class UserController {
         return userService.deleteUser(user_id);
     }
 
-    // Updating the department
-    // @PutMapping("/users")
-    // private ResponseEntity<String> updateUser(@RequestBody UserDTO userDTO){
-    //     return userService.(userDTO);
-    // }
+   
     /* Native Query */
     @PutMapping("/email")
     private ResponseEntity<String> updateUserEmail(@RequestBody UserDTO userDTO){

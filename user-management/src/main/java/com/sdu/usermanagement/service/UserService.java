@@ -7,7 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface UserService {
     /* Add user */
-    ResponseEntity<String> save(UserDTO userDTO, MultipartFile profileImageFile);
+    ResponseEntity<String> saveUser(UserDTO userDTO, MultipartFile profileImageFile);
 
     /* List all user */
     ResponseEntity<List<UserDTO>> findAllUser();

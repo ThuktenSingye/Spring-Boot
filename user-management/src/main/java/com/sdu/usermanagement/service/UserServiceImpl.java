@@ -43,26 +43,16 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private FileNameGenerator fileNameGenerator;
 
-    @Value("${file.upload-dir}")
+    @Value("${user-profile.upload-dir}")
     private String FOLDER_PATH;
+
+    private String filePath;
 
 
     @Override
-    public ResponseEntity<String> save(UserDTO userDTO, MultipartFile profileImageFile) {
-
-        String filePath = Paths.get(FOLDER_PATH, fileNameGenerator.generateUniqueFileName(profileImageFile.getOriginalFilename())).toString();
-        log.info("File path:"+ filePath);
+    public ResponseEntity<String> saveUser(UserDTO userDTO, MultipartFile profileImageFile) {
+        
         try{
-            // Create the directory if it doesn't exist
-            File directory = new File(FOLDER_PATH);
-            if (!directory.exists()) {
-                if (directory.mkdirs()) {
-                    log.info("Directory created successfully: {}", FOLDER_PATH);
-                } else {
-                    log.error("Failed to create directory: {}", FOLDER_PATH);
-                    return new ResponseEntity<>("Failed to create directory", HttpStatus.INTERNAL_SERVER_ERROR);
-                }
-            }
             
             if(userDTO.getGender() == null){
                 return new ResponseEntity<>("Missing Gender Parameter", HttpStatus.BAD_REQUEST);
@@ -81,20 +71,31 @@ public class UserServiceImpl implements UserService{
                 return new ResponseEntity<>("Section not found", HttpStatus.BAD_REQUEST);
             }
             
-
             /* GET profile  */
-
             ProfileImage profileImage = null;
+
             if(profileImageFile != null){
+                filePath = Paths.get(FOLDER_PATH, fileNameGenerator.generateUniqueFileName(profileImageFile.getOriginalFilename())).toString();
+                log.info("File path:"+ filePath);
+                 // Create the directory if it doesn't exist
+                File directory = new File(FOLDER_PATH);
+                if (!directory.exists()) {
+                    if (directory.mkdirs()) {
+                        log.info("Directory created successfully: {}", FOLDER_PATH);
+                    } else {
+                        log.error("Failed to create directory: {}", FOLDER_PATH);
+                        return new ResponseEntity<>("Failed to create directory", HttpStatus.INTERNAL_SERVER_ERROR);
+                    }
+                }
                 profileImage = ProfileImage.builder()
                 .imageName(profileImageFile.getOriginalFilename())
                 .imageType(profileImageFile.getContentType())
                 .imagePath(filePath)
                 .build();
+                profileImageFile.transferTo(new File(filePath));
+
             }
-            profileImageFile.transferTo(new File(filePath));
-            
-            
+           
             User user = userDtoToEntity(userDTO);
             user.setGender(gender);
             user.setSection(section);
@@ -248,6 +249,7 @@ public class UserServiceImpl implements UserService{
         UserDTO userDTO = new UserDTO();
         userDTO.setUserId(user.getUserId());
         userDTO.setCidNo(user.getCidNo());
+        userDTO.setEmployeeId(user.getEmployeeId());
         userDTO.setFirstName(user.getFirstName());
         userDTO.setMiddleName(user.getMiddleName());
         userDTO.setLastName(user.getLastName());
@@ -266,6 +268,7 @@ public class UserServiceImpl implements UserService{
     private User userDtoToEntity(UserDTO userDTO){
         User user = new User();
         user.setUserId(userDTO.getUserId());
+        user.setEmployeeId(userDTO.getEmployeeId());
         user.setCidNo(userDTO.getCidNo());
         user.setFirstName(userDTO.getFirstName());
         user.setMiddleName(userDTO.getMiddleName());

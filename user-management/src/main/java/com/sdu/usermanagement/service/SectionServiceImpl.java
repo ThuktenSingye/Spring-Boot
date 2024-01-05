@@ -64,15 +64,12 @@ public class SectionServiceImpl implements SectionService{
     @Override
     public ResponseEntity<String> saveSection(SectionDTO sectionDTO) {
         try{
-            Department department = departmentRepository.findById(sectionDTO.getDepartment().getDeptId()).orElse(null);
-
-            if (department == null) {
-                return new ResponseEntity<>("Department not found", HttpStatus.BAD_REQUEST);
-            }
-           
+            Department department = departmentRepository.findById(sectionDTO.getDepartment().getDeptId()).orElseThrow();
             // Set the Department in the Section entity
             Section section = sectionDtoToEntity(sectionDTO);
+
             section.setDepartment(department);
+            log.info("Section: " + section);
             Section savedSection = sectionRepository.saveAndFlush(section);
 
             if(savedSection == null){
@@ -83,10 +80,9 @@ public class SectionServiceImpl implements SectionService{
             return new ResponseEntity<>(HttpStatus.CREATED);
         }
         catch(Exception e){
-            log.error("Error while saving/updating  section: ", e.getMessage());
+            log.error("Error while saving/updating  section: " + e.getMessage());
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
     }
 
     @Override

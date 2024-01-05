@@ -17,7 +17,6 @@ import com.sdu.usermanagement.model.User;
 import com.sdu.usermanagement.repository.ProfileImageRepository;
 import com.sdu.usermanagement.repository.UserRepository;
 import com.sdu.usermanagement.utility.FileNameGenerator;
-
 import lombok.extern.log4j.Log4j2;
 
 
@@ -35,7 +34,7 @@ public class ProfileImageServiceImpl implements ProfileImageServie{
     private FileNameGenerator fileNameGenerator;
 
 
-    @Value("${file.upload-dir}")
+    @Value("${user-profile.upload-dir}")
     private String FOLDER_PATH;
 
 
