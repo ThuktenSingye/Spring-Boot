@@ -10,9 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.sdu.usermanagement.dto.DepartmentDTO;
 import com.sdu.usermanagement.service.DepartmentService;
@@ -28,8 +29,10 @@ public class DepartmentController {
 
 // Adding Department
     @PostMapping
-    private ResponseEntity<String> addDepartment(@RequestBody DepartmentDTO departmentDTO){
-        return departmentService.saveDepartment(departmentDTO);
+    private ResponseEntity<String> addDepartment(
+        @RequestPart(name = "department", required = true) DepartmentDTO departmentDTO,
+        @RequestPart(name = "departmentImage", required = false) MultipartFile departmentImage){
+        return departmentService.saveDepartment(departmentDTO, departmentImage);
 
     }
 
@@ -55,8 +58,11 @@ public class DepartmentController {
 
 // Updating the department
     @PutMapping
-    private ResponseEntity<String> updateDepartment(@RequestBody DepartmentDTO departmentDTO){
-        return departmentService.saveDepartment(departmentDTO);
+    private ResponseEntity<String> updateDepartment(
+        @RequestPart(name = "department", required = true) DepartmentDTO departmentDTO,
+        @RequestPart(name = "departmentImage", required = false) MultipartFile departmentImage){
+        return departmentService.saveDepartment(departmentDTO, departmentImage);
+
     }
 
 // Deleting the department
