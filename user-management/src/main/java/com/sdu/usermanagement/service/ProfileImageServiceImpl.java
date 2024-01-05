@@ -118,7 +118,6 @@ public class ProfileImageServiceImpl implements ProfileImageServie{
                 headers.setContentType(MediaType.IMAGE_GIF);
             } 
             else{
-                headers.setContentType(MediaType.J);
                 return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
             }
 
