@@ -2,6 +2,7 @@ package com.sdu.usermanagement.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,9 +35,9 @@ public class UserController {
     // Adding user
     @PostMapping()
     public ResponseEntity<String> addUser(
-        @RequestPart(name = "user") UserDTO userDTO,
+        @RequestPart(name = "user") HttpEntity<UserDTO>  userEntityDto,
         @RequestPart(name = "profileImageFile", required = false ) MultipartFile profileImageFile) {
-        return userService.saveUser(userDTO, profileImageFile);
+        return userService.saveUser(userEntityDto.getBody(), profileImageFile);
        
     }
     
