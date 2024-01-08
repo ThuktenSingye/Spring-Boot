@@ -35,7 +35,7 @@ public class UserController {
     @PostMapping()
     public ResponseEntity<String> addUser(
         @RequestPart(name = "user") UserDTO userDTO,
-        @RequestParam("profileImageFile") MultipartFile profileImageFile) {
+        @RequestPart(name =  "profileImageFile", required = false ) MultipartFile profileImageFile) {
         log.info("User object:" + userDTO);
         log.info("Image name: "+ profileImageFile.getOriginalFilename());
         
