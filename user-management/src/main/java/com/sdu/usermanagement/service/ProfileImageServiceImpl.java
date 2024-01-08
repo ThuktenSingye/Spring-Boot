@@ -100,9 +100,11 @@ public class ProfileImageServiceImpl implements ProfileImageServie{
                 log.info("Read image file is null");
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
+            log.info("Imaga read succesfully");
             HttpHeaders headers = new HttpHeaders();
         
             String imageType = user.getProfileImage().getImageType();
+            log.info("Image type:" + imageType);
 
             if ("image/png".equals(imageType)) {
                 headers.setContentType(MediaType.IMAGE_PNG);
