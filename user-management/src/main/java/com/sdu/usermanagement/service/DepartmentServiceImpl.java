@@ -48,6 +48,7 @@ public class DepartmentServiceImpl implements DepartmentService{
 
         try{
             
+            Department department = dtoToEntity(departmentDTO);
             DepartmentImage departmentImage = null;
 
             if(departmentImageFile != null){
@@ -71,11 +72,9 @@ public class DepartmentServiceImpl implements DepartmentService{
                 .deptImagePath(filePath)
                 .build();
                 departmentImageFile.transferTo(new File(filePath));
+                department.setDepartmentImage(departmentImage);
 
             }
-
-            Department department = dtoToEntity(departmentDTO);
-            department.setDepartmentImage(departmentImage);
 
             if(departmentRepository.saveAndFlush(department) == null){
                 log.info("[] returned value");
