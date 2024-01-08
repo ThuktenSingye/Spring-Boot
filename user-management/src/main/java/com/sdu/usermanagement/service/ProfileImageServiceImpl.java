@@ -69,7 +69,7 @@ public class ProfileImageServiceImpl implements ProfileImageServie{
             Files.deleteIfExists(Paths.get(existingProfileImagePath));
             /* Update the profile image profile */
             ProfileImage uploadedProfile  = profileImageRepository.saveAndFlush(profileImage); 
-            
+            log.info("Fiile path to be posted:" + filePath);
             profileImageFile.transferTo(new File(filePath));
             // user.setProfileImage(profileImage);
             if(uploadedProfile == null){
@@ -91,6 +91,10 @@ public class ProfileImageServiceImpl implements ProfileImageServie{
             User user = userRepository.findById(user_id).orElseThrow();
 
             String filePath = user.getProfileImage().getImagePath();
+            
+            log.info("USer iamge name:" + user.getProfileImage().getImageName());
+            log.info("User profile path"+ user.getProfileImage().getImagePath());
+            log.info("File type: " + user.getProfileImage().getImageType());
             log.info("File path: " + filePath);
             
             byte[] images = Files.readAllBytes(Paths.get(filePath));
@@ -100,7 +104,7 @@ public class ProfileImageServiceImpl implements ProfileImageServie{
                 log.info("Read image file is null");
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
-            log.info("Imaga read succesfully");
+            log.info("Imaga read");
             HttpHeaders headers = new HttpHeaders();
         
             String imageType = user.getProfileImage().getImageType();
