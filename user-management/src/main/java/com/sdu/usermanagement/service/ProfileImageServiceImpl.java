@@ -1,7 +1,6 @@
 package com.sdu.usermanagement.service;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,9 +108,6 @@ public class ProfileImageServiceImpl implements ProfileImageServie{
                 headers.setContentType(MediaType.IMAGE_PNG);
             } 
             else if ("image/jpeg".equals(imageType)) {
-                headers.setContentType(MediaType.IMAGE_JPEG);
-            } 
-            else if ("image/jpg".equals(imageType)) {
                 headers.setContentType(MediaType.IMAGE_JPEG);
             } 
             else if ("image/gif".equals(imageType)) {

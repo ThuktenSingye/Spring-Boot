@@ -35,8 +35,7 @@ public class UserController {
     @PostMapping()
     public ResponseEntity<String> addUser(
         @RequestPart(name = "user") UserDTO userDTO,
-        @RequestPart(name =  "profileImageFile", required = false ) MultipartFile profileImageFile) {
-        
+        @RequestPart(name = "profileImageFile", required = false ) MultipartFile profileImageFile) {
         return userService.saveUser(userDTO, profileImageFile);
        
     }
