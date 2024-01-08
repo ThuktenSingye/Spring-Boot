@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService{
             if (section == null) {
                 return new ResponseEntity<>("Section not found", HttpStatus.BAD_REQUEST);
             }
-            
+            User user = userDtoToEntity(userDTO);
             /* GET profile  */
             ProfileImage profileImage = null;
 
@@ -93,13 +93,13 @@ public class UserServiceImpl implements UserService{
                 .imagePath(filePath)
                 .build();
                 profileImageFile.transferTo(new File(filePath));
-
+                user.setProfileImage(profileImage);
             }
-           
-            User user = userDtoToEntity(userDTO);
+        
+            
             user.setGender(gender);
             user.setSection(section);
-            user.setProfileImage(profileImage);
+            
 
             User saveUser = userRepository.saveAndFlush(user);  
 

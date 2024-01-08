@@ -155,6 +155,7 @@ public class DepartmentServiceImpl implements DepartmentService{
         departmentDTO.setDeptId(department.getDeptId());
         departmentDTO.setDeptName(department.getDeptName());
         departmentDTO.setDeptDescription(department.getDeptDescription());
+        departmentDTO.setDepartmentImage(department.getDepartmentImage());
         return departmentDTO;
     }
 
@@ -165,7 +166,6 @@ public class DepartmentServiceImpl implements DepartmentService{
         department.setDeptId(departmentDTO.getDeptId());
         department.setDeptName(departmentDTO.getDeptName());
         department.setDeptDescription((departmentDTO.getDeptDescription()));
-        department.setDepartmentImage(departmentDTO.getDepartmentImage());
         department.setDepartmentImage(departmentDTO.getDepartmentImage());
         return department;
     }
