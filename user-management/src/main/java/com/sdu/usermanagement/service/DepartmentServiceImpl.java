@@ -190,7 +190,7 @@ public class DepartmentServiceImpl implements DepartmentService{
             Department department = departmentRepository.findById(dept_id).orElseThrow();
 
             String filePath = department.getDepartmentImage().getDeptImagePath(); 
-            log.info("File path:" + filePath);
+            log.info("Department File path:" + filePath);
 
             byte[] images = Files.readAllBytes(Paths.get(filePath));
 
@@ -207,7 +207,7 @@ public class DepartmentServiceImpl implements DepartmentService{
            
         } catch (Exception e) {
             // Handle the IOException
-            log.error("Error while fetching user image: " + e.getMessage());
+            log.error("Error while fetching department image: " + e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         
