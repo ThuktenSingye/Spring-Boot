@@ -3,7 +3,6 @@ package com.sdu.usermanagement.service;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -93,6 +92,7 @@ public class ProfileImageServiceImpl implements ProfileImageServie{
             User user = userRepository.findById(user_id).orElseThrow();
 
             String filePath = user.getProfileImage().getImagePath();
+            log.info("File path:" + filePath);
 
             byte[] images = Files.readAllBytes(Paths.get(filePath));
 
@@ -104,6 +104,7 @@ public class ProfileImageServiceImpl implements ProfileImageServie{
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        
 
             return new ResponseEntity<>(images, headers, HttpStatus.OK);
            
@@ -114,7 +115,6 @@ public class ProfileImageServiceImpl implements ProfileImageServie{
         }
         
     }
-   
-
- 
+    
+    
 }
