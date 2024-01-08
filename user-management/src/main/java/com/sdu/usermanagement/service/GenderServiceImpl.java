@@ -94,7 +94,6 @@ public class GenderServiceImpl implements GenderService{
     
     private GenderDTO genderEntityToDto(Gender gender){
         GenderDTO genderDTO = new GenderDTO();
-        genderDTO.setGenderId(gender.getGenderId());
         genderDTO.setGenderType(gender.getGenderType());
 
         return genderDTO;
@@ -102,7 +101,6 @@ public class GenderServiceImpl implements GenderService{
     }
     private Gender genderDtoToEntity(GenderDTO genderDTO){
         Gender gender = new Gender();
-        gender.setGenderId(genderDTO.getGenderId());
         gender.setGenderType(genderDTO.getGenderType());
 
         return gender;
