@@ -1,12 +1,15 @@
 package com.sdu.usermanagement.service;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -178,6 +181,37 @@ public class DepartmentServiceImpl implements DepartmentService{
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 	}
+
+
+
+    @Override
+    public ResponseEntity<byte[]> findDepartmentImage(Integer dept_id) {
+        try {
+            Department department = departmentRepository.findById(dept_id).orElseThrow();
+
+            String filePath = department.getDepartmentImage().getDeptImagePath(); 
+            log.info("File path:" + filePath);
+
+            byte[] images = Files.readAllBytes(Paths.get(filePath));
+
+            if(images == null){
+                // Cannot read image byte
+                log.info("Read image file is null");
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        
+            return new ResponseEntity<>(images, headers, HttpStatus.OK);
+           
+        } catch (Exception e) {
+            // Handle the IOException
+            log.error("Error while fetching user image: " + e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        
+    }
 
 
 

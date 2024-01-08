@@ -23,4 +23,7 @@ public interface DepartmentService {
     ResponseEntity<Long> findTotalDepartmentCount();
 
     
+    ResponseEntity<byte[]> findDepartmentImage(Integer dept_id);
+
+    
 }

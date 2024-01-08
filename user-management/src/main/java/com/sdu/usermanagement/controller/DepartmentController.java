@@ -33,7 +33,6 @@ public class DepartmentController {
         @RequestPart(name = "department", required = true) DepartmentDTO departmentDTO,
         @RequestPart(name = "departmentImage", required = false) MultipartFile departmentImage){
         return departmentService.saveDepartment(departmentDTO, departmentImage);
-
     }
 
 // Get All Department
@@ -70,5 +69,12 @@ public class DepartmentController {
     private ResponseEntity<String> deleteDepartment(@PathVariable Integer dept_id){
         return departmentService.deleteDepartment(dept_id);
     }
+
+    @GetMapping("/images/{dept_id}")
+    private ResponseEntity<byte[]> getDepartmentImage(@PathVariable Integer dept_id){
+        return departmentService.findDepartmentImage(dept_id);
+    }
+
+
 
 }

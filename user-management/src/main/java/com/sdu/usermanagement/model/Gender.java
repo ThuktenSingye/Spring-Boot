@@ -15,7 +15,7 @@ import lombok.Data;
 @Table(name = "gender")
 public class Gender{
     public enum GenderType {
-        M, F, Others
+        Male, Female, Others
     }
 
     @Id
