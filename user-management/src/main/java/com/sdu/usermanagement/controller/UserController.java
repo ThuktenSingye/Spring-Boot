@@ -2,7 +2,6 @@ package com.sdu.usermanagement.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,24 +18,20 @@ import org.springframework.web.multipart.MultipartFile;
 import com.sdu.usermanagement.dto.UserDTO;
 import com.sdu.usermanagement.service.UserService;
 
-import lombok.extern.log4j.Log4j2;
-
-
 @RestController
 @RequestMapping("/users")
 @CrossOrigin(origins = "http://localhost:3000")
-@Log4j2
 public class UserController {
     
     @Autowired
     private UserService userService;
 
     // Adding user
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<String> addUser(
-        @RequestPart(name = "user") HttpEntity<UserDTO>  userEntityDto,
+        @RequestPart(name = "user") UserDTO userDTO,
         @RequestPart(name = "profileImageFile", required = false ) MultipartFile profileImageFile) {
-        return userService.saveUser(userEntityDto.getBody(), profileImageFile);
+        return userService.saveUser(userDTO, profileImageFile);
        
     }
     
