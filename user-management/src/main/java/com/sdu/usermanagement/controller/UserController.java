@@ -36,8 +36,6 @@ public class UserController {
     public ResponseEntity<String> addUser(
         @RequestPart(name = "user") UserDTO userDTO,
         @RequestPart(name =  "profileImageFile", required = false ) MultipartFile profileImageFile) {
-        log.info("User object:" + userDTO);
-        log.info("Image name: "+ profileImageFile.getOriginalFilename());
         
         return userService.saveUser(userDTO, profileImageFile);
        
