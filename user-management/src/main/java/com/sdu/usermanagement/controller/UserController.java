@@ -19,10 +19,13 @@ import org.springframework.web.multipart.MultipartFile;
 import com.sdu.usermanagement.dto.UserDTO;
 import com.sdu.usermanagement.service.UserService;
 
+import lombok.extern.log4j.Log4j2;
+
 
 @RestController
 @RequestMapping("/users")
 @CrossOrigin(origins = "http://localhost:3000")
+@Log4j2
 public class UserController {
     
     @Autowired
@@ -31,8 +34,11 @@ public class UserController {
     // Adding user
     @PostMapping()
     public ResponseEntity<String> addUser(
-        @RequestParam(name = "user") UserDTO userDTO,
-        @RequestPart(name = "profileImageFile") MultipartFile profileImageFile) {
+        @RequestPart(name = "user") UserDTO userDTO,
+        @RequestParam("profileImageFile") MultipartFile profileImageFile) {
+        log.info("User object:" + userDTO);
+        log.info("Image name: "+ profileImageFile.getOriginalFilename());
+        
         return userService.saveUser(userDTO, profileImageFile);
        
     }
