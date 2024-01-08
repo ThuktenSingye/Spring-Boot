@@ -103,7 +103,7 @@ public class ProfileImageServiceImpl implements ProfileImageServie{
             }
 
             HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.parseMediaType(user.getProfileImage().getImageType()));
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
             return new ResponseEntity<>(images, headers, HttpStatus.OK);
            
