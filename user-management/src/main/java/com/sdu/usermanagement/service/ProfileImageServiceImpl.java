@@ -91,12 +91,7 @@ public class ProfileImageServiceImpl implements ProfileImageServie{
             User user = userRepository.findById(user_id).orElseThrow();
 
             String filePath = user.getProfileImage().getImagePath();
-            
-            log.info("USer iamge name:" + user.getProfileImage().getImageName());
-            log.info("User profile path"+ user.getProfileImage().getImagePath());
-            log.info("File type: " + user.getProfileImage().getImageType());
-            log.info("File path: " + filePath);
-            
+
             byte[] images = Files.readAllBytes(Paths.get(filePath));
 
             if(images == null){
@@ -104,24 +99,25 @@ public class ProfileImageServiceImpl implements ProfileImageServie{
                 log.info("Read image file is null");
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
-            log.info("Imaga read");
-            HttpHeaders headers = new HttpHeaders();
-        
-            String imageType = user.getProfileImage().getImageType();
-            log.info("Image type:" + imageType);
 
-            if ("image/png".equals(imageType)) {
-                headers.setContentType(MediaType.IMAGE_PNG);
-            } 
-            else if ("image/jpeg".equals(imageType)) {
-                headers.setContentType(MediaType.IMAGE_JPEG);
-            } 
-            else if ("image/gif".equals(imageType)) {
-                headers.setContentType(MediaType.IMAGE_GIF);
-            } 
-            else{
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            }
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+        
+            // String imageType = user.getProfileImage().getImageType();
+            // log.info("Image type:" + imageType);
+
+            // if ("image/png".equals(imageType)) {
+            //     headers.setContentType(MediaType.IMAGE_PNG);
+            // } 
+            // else if ("image/jpeg".equals(imageType)) {
+            //     headers.setContentType(MediaType.IMAGE_JPEG);
+            // } 
+            // else if ("image/gif".equals(imageType)) {
+            //     headers.setContentType(MediaType.IMAGE_GIF);
+            // } 
+            // else{
+            //     return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            // }
 
             return new ResponseEntity<>(images, headers, HttpStatus.OK);
            
