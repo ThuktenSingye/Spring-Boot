@@ -3,6 +3,7 @@ package com.sdu.usermanagement.service;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -17,6 +18,7 @@ import com.sdu.usermanagement.repository.ProfileImageRepository;
 import com.sdu.usermanagement.repository.UserRepository;
 import com.sdu.usermanagement.utility.FileNameGenerator;
 import lombok.extern.log4j.Log4j2;
+
 
 
 @Service
@@ -101,23 +103,7 @@ public class ProfileImageServiceImpl implements ProfileImageServie{
             }
 
             HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        
-            // String imageType = user.getProfileImage().getImageType();
-            // log.info("Image type:" + imageType);
-
-            // if ("image/png".equals(imageType)) {
-            //     headers.setContentType(MediaType.IMAGE_PNG);
-            // } 
-            // else if ("image/jpeg".equals(imageType)) {
-            //     headers.setContentType(MediaType.IMAGE_JPEG);
-            // } 
-            // else if ("image/gif".equals(imageType)) {
-            //     headers.setContentType(MediaType.IMAGE_GIF);
-            // } 
-            // else{
-            //     return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-            // }
+            headers.setContentType(MediaType.parseMediaType(user.getProfileImage().getImageType()));
 
             return new ResponseEntity<>(images, headers, HttpStatus.OK);
            
@@ -128,8 +114,7 @@ public class ProfileImageServiceImpl implements ProfileImageServie{
         }
         
     }
+   
 
-
-    
-    
+ 
 }
